@@ -1,0 +1,31 @@
+name: age_gender_offline
+description: "A new Flutter project."
+publish_to: 'none' 
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  image_picker :  
+  cupertino_icons: ^1.0.2
+  tflite_flutter: ^0.10.4
+  image: ^4.1.6
+  google_mlkit_face_detection: ^0.9.0
+  camera: ^0.10.5+9
+  path_provider: ^2.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/

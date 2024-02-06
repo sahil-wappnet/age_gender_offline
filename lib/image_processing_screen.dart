@@ -16,10 +16,9 @@ class _ImageProcessingScreenState extends State<ImageProcessingScreen> {
 
   File? pickedImage;
   img.Image? image;
-  Interpreter? interpreter;
-
-  static const String modelPath = 'assets/model_lite_age_q.tflite';
-  List<String> modelPaths = ['assets/model_lite_gender_q.tflite','model_lite_age_q.tflite'];
+  Interpreter? ageInterpreter;
+  static const String ageModelPath = 'assets/agedetection.tflite';
+  // List<String> modelPaths = ['assets/model_lite_gender_q.tflite','model_lite_age_q.tflite'];
   
 
   @override
@@ -39,19 +38,19 @@ class _ImageProcessingScreenState extends State<ImageProcessingScreen> {
       interpreterOptions.addDelegate(GpuDelegate());
     }
     log('Loading interpreter...');
-    interpreter =
-        await Interpreter.fromAsset(modelPath, options: interpreterOptions);
-    log('Input tensor count: ${interpreter!.getInputTensors().length}');
-    log('Output tensor count: ${interpreter!.getOutputTensors().length}');
-    for (int i = 0; i < interpreter!.getInputTensors().length; i++) {
-      log('Input tensor $i name: ${interpreter!.getInputTensor(i).name}');
-      log('Input tensor $i shape: ${interpreter!.getInputTensor(i).shape}');
-      log('Input tensor $i data type: ${interpreter!.getInputTensor(i).type}');
+    ageInterpreter =
+        await Interpreter.fromAsset(ageModelPath, options: interpreterOptions);
+    log('Input tensor count: ${ageInterpreter!.getInputTensors().length}');
+    log('Output tensor count: ${ageInterpreter!.getOutputTensors().length}');
+    for (int i = 0; i < ageInterpreter!.getInputTensors().length; i++) {
+      log('Input tensor $i name: ${ageInterpreter!.getInputTensor(i).name}');
+      log('Input tensor $i shape: ${ageInterpreter!.getInputTensor(i).shape}');
+      log('Input tensor $i data type: ${ageInterpreter!.getInputTensor(i).type}');
     }
-    for (int i = 0; i < interpreter!.getOutputTensors().length; i++) {
-      log('Output tensor $i name: ${interpreter!.getOutputTensor(i).name}');
-      log('Output tensor $i shape: ${interpreter!.getOutputTensor(i).shape}');
-      log('Output tensor $i data type: ${interpreter!.getOutputTensor(i).type}');
+    for (int i = 0; i < ageInterpreter!.getOutputTensors().length; i++) {
+      log('Output tensor $i name: ${ageInterpreter!.getOutputTensor(i).name}');
+      log('Output tensor $i shape: ${ageInterpreter!.getOutputTensor(i).shape}');
+      log('Output tensor $i data type: ${ageInterpreter!.getOutputTensor(i).type}');
     }
   }
 
@@ -66,8 +65,8 @@ class _ImageProcessingScreenState extends State<ImageProcessingScreen> {
 
       final imageInput = img.copyResize(
         image!,
-        width: 200,
-        height: 200,
+        width: 224,
+        height: 224,
       );
       
       final imageRGBValue = List.generate(
@@ -83,14 +82,14 @@ class _ImageProcessingScreenState extends State<ImageProcessingScreen> {
 
       final input = [imageRGBValue];
     
-    final output1 = [List<double>.filled(1, 1)];
-    final output =[[0.0]];
-    log("Op value : $output");
+    final output = [List<double>.filled(9, 0)];
+    // final output =[[0.0]];
+    // log("Op value : $output");
 
-    interpreter!.run(input, output1);
+    ageInterpreter!.run(input, output);
   
     // final result = ;
-    log("result : ${output1[0][0]} ");
+    log("result : $output ");
 
       
     }
